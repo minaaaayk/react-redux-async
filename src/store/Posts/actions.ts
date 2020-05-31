@@ -28,7 +28,7 @@ export const getOnePost = (postid: number) =>{
         postid 
     }
 }
-export const GET_POST_COMMENTS = (postid: number)=> {
+export const getPostComments = (postid: number)=> {
     return { 
         type: Types.actions.GET_POST_COMMENTS as typeof Types.actions.GET_POST_COMMENTS,
         postid 
@@ -52,8 +52,8 @@ const getReturnType = <R>(f: (...args: any[]) => R): R => null!
 
 const getAllPostsType = getReturnType(getAllPosts)
 const getOnePostType = getReturnType(getOnePost)
-const GET_POST_COMMENTSType = getReturnType(GET_POST_COMMENTS)
+const getPostCommentsType = getReturnType(getPostComments)
 const AddPostType = getReturnType(AddPost)
 const DeletePostType = getReturnType(DeletePost)
 
-export type ActionsType = typeof getAllPostsType | typeof getOnePostType | typeof  GET_POST_COMMENTSType |typeof AddPostType |typeof  DeletePostType
+export type ActionsType = typeof getAllPostsType | typeof getOnePostType | typeof  getPostCommentsType |typeof AddPostType |typeof  DeletePostType
