@@ -24,7 +24,7 @@ export interface Comment {
 }
 export interface PostsState
 {    
-     posts: Post[]
+    posts: Post[]
 }
 
 export const initialState: PostsState = {
