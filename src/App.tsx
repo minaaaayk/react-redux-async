@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { PostsState,Post } from './store/Posts/types';
 import * as actions from './store/Posts/actions';
 
-const mapStateToProps = ({ posts }: PostsState) => {
-  return { posts };
+const mapStateToProps = (State: PostsState) => {
+  return { posts:State.posts };
 }
 
 const mapDispatcherToProps = (dispatch: Dispatch<actions.ActionsType>) => {
@@ -24,8 +24,13 @@ type ReduxType = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispa
 const App:React.FC<ReduxType> = props => {
   return (
     <div className="App">
-      <button onClick={() => props.getAllPosts}>Get All Posts</button>
+      <button onClick={() => props.getAllPosts()}>Get All Posts</button>
       <button onClick={() => props.getOnrPost(1)}>Get Post 1</button>
+      <ul>
+        {props.posts? props.posts.map((p:Post) => 
+          (<li key={p.id}> {p.title} </li>)
+        ): ""}
+      </ul>
     </div>
   );
 }
