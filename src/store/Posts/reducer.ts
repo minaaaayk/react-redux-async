@@ -1,18 +1,16 @@
 import * as Actions from './actions';
 import * as Types from './types';
 
-const baseUrl = 'https://jsonplaceholder.typicode.com/posts/'
+const baseUrl = 'https://jsonplaceholder.typicode.com/posts'
 
 const fetchPost= async  (url: string, id?:number): Promise<Types.Post | Types.Post[]> => {
-    if(id){
-        const response = await fetch(url)
-        const { data } = await response.json()
-        return data
+    console.log("umad...");
+    var newUrl = url;
+    if(id !== undefined){
+       newUrl = url + '/' + id;
     }
-    const response = await fetch(url + '/' + id)
-    const { data } = await response.json()
-    return data
-    
+    const response = await fetch(newUrl)
+    return response.json()
 }
 
 
@@ -22,15 +20,21 @@ export const PostReducer = (
   ): Types.PostsState =>
    {
     switch (action.type) {
-      case Types.actions.GET_ALL_POSTS:
-        fetchPost(baseUrl).then(data=> {
-            console.log(data);
+      case Types.actions.GET_ALL_POSTS:{
+          var newData:  Types.Post[] = [];
+        fetchPost(baseUrl).then((data)=>
+         {
+            newData = data as Types.Post[];  
+            console.log(newData);
             
         });
         return {
-            posts: []
+            posts: [...newData]
         }
-      case Types.actions.GET_ONE_POST:
+        
+        
+    }
+      case Types.actions.GET_ONE_POST: {
         fetchPost(baseUrl, action.postid).then(data=> {
             console.log(data);
             
@@ -38,6 +42,7 @@ export const PostReducer = (
         return {
             posts: []
         }
+    }
     case Types.actions.GET_POST_COMMENTS:
         return {
             posts:[]
