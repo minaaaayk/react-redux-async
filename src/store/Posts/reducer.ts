@@ -16,7 +16,7 @@ const fetchPost= async  (url: string, id?:number): Promise<Types.Post | Types.Po
 }
 
 
-export const chatReducer = (
+export const PostReducer = (
     state = Types.initialState,
     action: Actions.ActionsType
   ): Types.PostsState =>
