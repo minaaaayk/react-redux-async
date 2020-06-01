@@ -26,6 +26,7 @@ const App:React.FC<ReduxType> = props => {
     <div className="App">
       <button onClick={() => props.getAllPosts()}>Get All Posts</button>
       <button onClick={() => props.getOnrPost(1)}>Get Post 1</button>
+      {console.log(props.posts)}
       <ul>
         {props.posts? props.posts.map((p:Post) => 
           (<li key={p.id}> {p.title} </li>)

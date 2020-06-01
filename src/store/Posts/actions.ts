@@ -1,6 +1,5 @@
 // our Action creators
 import * as Types from './types';
-
 // export function typedAction<T extends string>(type: T): { type: T };
 // export function typedAction<T extends string, P extends any>(
 //   type: T,
@@ -19,19 +18,19 @@ import * as Types from './types';
   
 export const getAllPosts = ()=> {
     return { 
-        type: Types.actions.GET_ALL_POSTS as typeof Types.actions.GET_ALL_POSTS 
+        type: Types.actions.GET_ALL_POSTS as typeof Types.actions.GET_ALL_POSTS, 
     }
 }
-export const getOnePost = (postid: number) =>{
+export const getOnePost = (postId: number) =>{
     return { 
         type: Types.actions.GET_ONE_POST as typeof Types.actions.GET_ONE_POST,
-        postid 
+        postId 
     }
 }
-export const getPostComments = (postid: number)=> {
+export const getPostComments = (postId: number)=> {
     return { 
         type: Types.actions.GET_POST_COMMENTS as typeof Types.actions.GET_POST_COMMENTS,
-        postid 
+        postId 
     }
 }
 export const AddPost = (post: Types.Post)=>{
@@ -40,10 +39,10 @@ export const AddPost = (post: Types.Post)=>{
         post 
     }
 }
-export const DeletePost = (postid: number)=> {
+export const DeletePost = (postId: number)=> {
     return { 
         type: Types.actions.DELETE_POST as typeof Types.actions.DELETE_POST,
-        postid 
+        postId 
     }
 }
 
@@ -55,5 +54,21 @@ const getOnePostType = getReturnType(getOnePost)
 const getPostCommentsType = getReturnType(getPostComments)
 const AddPostType = getReturnType(AddPost)
 const DeletePostType = getReturnType(DeletePost)
-
 export type ActionsType = typeof getAllPostsType | typeof getOnePostType | typeof  getPostCommentsType |typeof AddPostType |typeof  DeletePostType
+
+
+export const Async_getAllPosts = (posts: Types.Post[])=> {
+    return { 
+        type: Types.actions.GET_ALL_POSTS as typeof Types.actions.GET_ALL_POSTS, 
+        posts
+    }
+}
+export const Async_getOnePost = (post : Types.Post) =>{
+    return { 
+        type: Types.actions.GET_ONE_POST as typeof Types.actions.GET_ONE_POST,
+        post
+    }
+}
+const Async_getAllPostsType = getReturnType(Async_getAllPosts)
+const Async_getOnePostType = getReturnType(Async_getOnePost)
+export type Async_ActionsType = typeof Async_getAllPostsType | typeof Async_getOnePostType;
