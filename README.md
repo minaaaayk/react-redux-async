@@ -167,9 +167,8 @@ const mapDispatcherToProps = (dispatch: Dispatch<actions.ActionsType>) => {
 - create props type: 
 ```tsx
 type ReduxType = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatcherToProps>;
-</code></pre>
+```
 - type of App Component: 
-<pre><code> 
 ```tsx
 const App: React.FC<ReduxType> = (props) => {
   ....
