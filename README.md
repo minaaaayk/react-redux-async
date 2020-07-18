@@ -74,3 +74,26 @@
   ....
   export type Async_ActionsType = typeof Async_getAllPostsType | typeof Async_getOnePostType | ....
   </code></pre>
+## <span style="color:#2c7a78">3. Create reducer in reducer.ts : <span>
+<pre><code> 
+export const PostReducer = (
+    state = Types.initialState,
+    action: Actions.Async_ActionsType
+  ): Types.PostsState =>
+   {
+    switch (action.type) {
+      case Types.actions.GET_ALL_POSTS:{
+        return { posts: [...action.posts] }
+       }
+      case Types.actions.GET_ONE_POST: {
+        return {posts:[...state.posts,action.post]}
+       }
+       .....
+      default:
+        return state
+    }
+  }
+</code></pre>
+
+
+
