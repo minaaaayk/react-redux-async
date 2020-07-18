@@ -94,7 +94,7 @@ export const PostReducer = (
     }
   }
 </code></pre>
-## <span style="color:#2c7a78">3. Create middleware to connect between sync actions and async actions : <span>
+## <span style="color:#2c7a78">4. Create middleware to connect between sync actions and async actions : <span>
  - async method:
   <pre><code> 
   const fetchPost = async  (url: string, id?:number): Promise<Types.Post | Types.Post[]> => {
@@ -131,5 +131,17 @@ export const apiMiddleware: Middleware =
                     return next(action)
               }      
         };
+</code></pre>
+## <span style="color:#2c7a78">5. Create stors: <span>
+- create rootReducer to manage all reducers: 
+<pre><code> 
+export const rootReducer = combineReducers({
+  PostReducer: PostReducer,
+  //other reducers...
+});
+</code></pre>
+- bind reducers and middleware: 
+<pre><code> 
+export const store = createStore(rootReducer, applyMiddleware(apiMiddleware));
 </code></pre>
 
