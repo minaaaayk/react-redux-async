@@ -94,6 +94,42 @@ export const PostReducer = (
     }
   }
 </code></pre>
-
-
+## <span style="color:#2c7a78">3. Create middleware to connect between sync actions and async actions : <span>
+ - async method:
+  <pre><code> 
+  const fetchPost = async  (url: string, id?:number): Promise<Types.Post | Types.Post[]> => {
+    var newUrl = url;
+    if(id !== undefined){
+       newUrl = url + '/' + id;
+    }
+    const response = await fetch(newUrl)
+    return response.json()
+  }
+</code></pre>
+- middleware as connector:
+<pre><code> 
+export const apiMiddleware: Middleware =
+ (store) => 
+    next => 
+        (action:actions.ActionsType) => {
+            switch (action.type) {
+                case Types.actions.GET_ALL_POSTS:{
+                    fetchPost(baseUrl).then((data)=> {
+                         next(actions.Async_getAllPosts(data as Types.Post[]))
+                    })
+                    break;
+                }
+                case Types.actions.GET_ONE_POST: {
+                    const {postId} = action
+                    fetchPost(baseUrl, postId).then((data)=> {
+                        next(actions.Async_getOnePost(data as Types.Post))
+                    })
+                    break;
+                }
+                .......
+                default:
+                    return next(action)
+              }      
+        };
+</code></pre>
 
