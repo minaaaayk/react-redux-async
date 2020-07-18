@@ -8,7 +8,7 @@
   Note: this project not used redux-thunk
 ## <span style="color:#2c7a78">1. Create Types in types.ts : <span>
   - type for actions:
-  <pre><code> 
+  ```tsx
   export enum actions {
     GET_ALL_POSTS = 'GET_ALL_POSTS',
     GET_ONE_POST = 'GET_ONE_POST',
@@ -16,9 +16,9 @@
     ADD_POST = 'ADD_POST',
     DELETE_POST = 'DELETE_POST' 
   }
-</code></pre>
+```
 - type for one element of state:
-  <pre><code> 
+```tsx
   export interface Post {
     id: number,
     title: string,
@@ -26,19 +26,19 @@
     userId: number,
     comments? : Comment[]
     }
-    </code></pre>
+```
 - type for states:
-  <pre><code> 
+```tsx 
   export interface PostsState{    
     posts: Post[]
     }
   export const initialState: PostsState = {
     posts: []
     };
-    </code></pre>
+```
 ## <span style="color:#2c7a78">2. Create actions in actions.ts : <span>
   - sync actions:
-  <pre><code> 
+```tsx
   export const getOnePost = (postId: number) =>{
     return { 
         type: Types.actions.GET_ONE_POST as typeof Types.actions.GET_ONE_POST,
@@ -46,18 +46,18 @@
         }
     }
     //... other actions
-</code></pre>
+```
   Note: In the following, sync actions used async action in middlewares.
  - create actionType for sync actions:
-  <pre><code> 
+```tsx
   const getReturnType = <R>(f: (...args: any[]) => R): R => null!
   const getAllPostsType = getReturnType(getAllPosts)
   const getOnePostType = getReturnType(getOnePost)
   ....
   export type ActionsType = typeof getAllPostsType | typeof getOnePostType | ....
-</code></pre>
+```
 - async actions:
-  <pre><code> 
+```tsx
   export const Async_getOnePost = (post : Types.Post) =>{
     return { 
         type: Types.actions.GET_ONE_POST as typeof Types.actions.GET_ONE_POST,
@@ -65,17 +65,17 @@
         }
      }
      //... other actions
-     </code></pre>
+```
  - create actionType for async actions:
-  <pre><code> 
+```tsx
   const getReturnType = <R>(f: (...args: any[]) => R): R => null!
   const Async_getAllPostsType = getReturnType(Async_getAllPosts)
   const Async_getOnePostType = getReturnType(Async_getOnePost)
   ....
   export type Async_ActionsType = typeof Async_getAllPostsType | typeof Async_getOnePostType | ....
-  </code></pre>
+```
 ## <span style="color:#2c7a78">3. Create reducer in reducer.ts : <span>
-<pre><code> 
+```tsx
 export const PostReducer = (
     state = Types.initialState,
     action: Actions.Async_ActionsType
@@ -93,11 +93,11 @@ export const PostReducer = (
         return state
     }
   }
-</code></pre>
+```
 ## <span style="color:#2c7a78">4. Create middleware to connect between sync actions and async actions : <span>
- - async method:
-  <pre><code> 
-  const fetchPost = async  (url: string, id?:number): Promise<Types.Post | Types.Post[]> => {
+ - async method: 
+```tsx
+const fetchPost = async  (url: string, id?:number): Promise<Types.Post | Types.Post[]> => {
     var newUrl = url;
     if(id !== undefined){
        newUrl = url + '/' + id;
@@ -105,9 +105,9 @@ export const PostReducer = (
     const response = await fetch(newUrl)
     return response.json()
   }
-</code></pre>
+```
 - middleware as connector:
-<pre><code> 
+```tsx
 export const apiMiddleware: Middleware =
  (store) => 
     next => 
@@ -131,17 +131,65 @@ export const apiMiddleware: Middleware =
                     return next(action)
               }      
         };
-</code></pre>
-## <span style="color:#2c7a78">5. Create stors: <span>
+```
+## <span style="color:#2c7a78">5. Create stores: <span>
 - create rootReducer to manage all reducers: 
-<pre><code> 
+```tsx
 export const rootReducer = combineReducers({
   PostReducer: PostReducer,
   //other reducers...
 });
-</code></pre>
+```
 - bind reducers and middleware: 
-<pre><code> 
+```tsx
 export const store = createStore(rootReducer, applyMiddleware(apiMiddleware));
+```
+## <span style="color:#2c7a78">6. use stors(reducers and actions): <span>
+- add states as props: 
+```tsx
+const mapStateToProps = (State: {
+  PostReducer: PostsState;
+  /*other reducers*/
+  }) => {
+    return { posts: State.PostReducer.posts };
+    };
+```
+- add sync actions as props:  
+```tsx
+const mapDispatcherToProps = (dispatch: Dispatch<actions.ActionsType>) => {
+  return {
+    getAllPosts: () => dispatch(actions.getAllPosts()),
+    getOnePost: (id: number) => dispatch(actions.getOnePost(id)),
+    .....
+  };
+};
+```
+- create props type: 
+```tsx
+type ReduxType = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatcherToProps>;
 </code></pre>
-
+- type of App Component: 
+<pre><code> 
+```tsx
+const App: React.FC<ReduxType> = (props) => {
+  ....
+};
+```
+- use of actions in App Component: 
+```tsx
+ <button onClick={() => props.getAllPosts()}>Get All Posts</button>
+ <button onClick={() => props.getOnrPost(1)}>Get Post 1</button>
+ ....
+ ```
+- use of states in App Component: 
+```tsx
+ <ul>
+     {props.posts
+          ? props.posts.map((p: Post) => <li key={p.id}> {p.title} </li>)
+          : ""}
+  </ul>
+ ```
+- map states and actions as props of App Component: 
+```tsx
+ export default connect(mapStateToProps, mapDispatcherToProps)(App);
+```
